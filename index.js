@@ -3,8 +3,8 @@
 /**
  * Entry point
  * 
- * @desc    REST Object Tree Generator - Entry Point
- * @cauthor Mark Jivko
+ * @desc   REST Object Tree Generator - Entry Point
+ * @author Mark Jivko
  */
 const fs = require('fs');
 const path = require('path');
@@ -15,7 +15,7 @@ class Runner {
      * Check node_modules is installed and start the runner
      */
     constructor() {
-        logger.info(`\n # REST Object Tree Generator #`);
+        logger.info(`# REST Object Tree Generator`);
 
         do {
             // Probably first run, install node modules
@@ -123,11 +123,15 @@ class Runner {
             const generatorFile = args.shift();
 
             // Load the utility
-            logger.info(`> Using the "${generatorFile}" generator...`);
+            logger.info(`Using the "${generatorFile}" generator\n`);
             const generatorClass = require(`./src/generator/${generatorFile}.js`);
 
             // Run it
-            (new generatorClass(args)).run();
+            try {
+                (new generatorClass(args)).run();
+            } catch (e) {
+                logger.error(e);
+            }
         } while(false);
     }
 }

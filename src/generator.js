@@ -3,14 +3,15 @@
 /**
  * Generator
  * 
- * @desc    Common Generator
- * @cauthor Mark Jivko
+ * @desc   Common Generator
+ * @author Mark Jivko
  */
 const fs = require('fs');
 const yaml = require('js-yaml');
 const path = require('path');
 const mustache = require('mustache');
 const logger = require('./util/logger.js');
+const config = require('./util/config.js');
 
 module.exports = class Generator {
     /**
@@ -56,7 +57,7 @@ module.exports = class Generator {
 
         // Create the configuration from sample
         if (!fs.existsSync(this.configPath)) {
-            logger.debug('Preparing "config.yaml"');
+            logger.debug('Initialize "config.yaml"');
             fs.copyFileSync(
                 path.join(__dirname, '../config/config.sample.yaml'),
                 this.configPath
@@ -68,7 +69,9 @@ module.exports = class Generator {
             fs.readFileSync(this.configPath, 'utf8')
         );
 
-        // @TODO Validate configuration data
+        // Validate the configuration data
+        logger.debug('Validate configuration');
+        config.validate(this.configData);
 
         // Clean-up the output
         if (fs.existsSync(this.outputPath)) {
@@ -95,13 +98,13 @@ module.exports = class Generator {
         // Run each one
         generators.forEach(generator => {
             const generatorLabel = generator.replace(/([A-Z])/g, " $1");
-            logger.debug(`${generatorLabel[0].toUpperCase()}${generatorLabel.slice(1)}`);
+            logger.debug(`\n ${generatorLabel[0].toUpperCase()}${generatorLabel.slice(1)}`);
 
             // Execute the task
             this[generator]();
         });
 
-        logger.info(`> Created project in "./out" in ${Date.now() - this.startTime}ms`);
+        logger.info(`\n Saved project in "./out" in ${Date.now() - this.startTime}ms\n`);
     }
 
     /**
@@ -158,7 +161,7 @@ module.exports = class Generator {
             };
 
             // Parse the .mustache file
-            logger.debug(` * Rendering "${path.basename(fromPath)}"...`)
+            logger.debug(` * Rendered "${path.basename(fromPath)}"`)
             var $this = this;
             result = mustache.render(
                 fs.readFileSync(fromPath).toString(),
@@ -260,7 +263,7 @@ module.exports = class Generator {
                 }
 
                 // Write to file
-                logger.debug(` - Saving render to "${toPath.replace(/^.*?\/out\//g, 'out/')}"...`)
+                logger.debug(` - Saved render to "${toPath.replace(/^.*?\/out\//g, 'out/')}"`)
                 fs.writeFileSync(toPath, result);
             }
         } while(false);
@@ -294,12 +297,12 @@ module.exports = class Generator {
             }
 
             // Write to file
-            logger.debug(` - Saving OpenAPI specification to "${toPath.replace(/^.*?\/out\//g, 'out/')}"...`)
+            logger.debug(` - Saved OpenAPI specification to "${toPath.replace(/^.*?\/out\//g, 'out/')}"`)
             fs.writeFileSync(toPath, result);
         }
 
         return result;
     }
-}
+};
 
 /* EOF */

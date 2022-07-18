@@ -1,6 +1,7 @@
 /**
- * Logging utility
- *
+ * Logger
+ * 
+ * @desc    Common Logging utility
  * @author Mark Jivko
  */
 module.exports = {
@@ -20,6 +21,6 @@ module.exports = {
     debug: function () {
         console.log('\x1b[30m', ...arguments, '\x1b[0m');
     }
-}
+};
 
 /* EOF */

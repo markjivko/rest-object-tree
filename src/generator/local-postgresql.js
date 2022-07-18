@@ -3,14 +3,14 @@
 /**
  * Generator
  * 
- * @desc    Local + MySQL Generator
- * @cauthor Mark Jivko
+ * @desc   Local + PostgreSQL Generator
+ * @author Mark Jivko
  */
 const Generator = require('../generator.js');
 const path = require('path');
 const logger = require('../util/logger.js');
 
-module.exports = class Generator_LocalMysql extends Generator {
+module.exports = class Generator_LocalPostgresql extends Generator {
 
     /**
      * Template path
@@ -72,6 +72,6 @@ module.exports = class Generator_LocalMysql extends Generator {
             );
         });        
     }
-}
+};
 
 /* EOF */
