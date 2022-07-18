@@ -28,12 +28,12 @@ npm run serve
 
 You cannot **create** objects or object drafts directly.  
 
-1.  `PUT /object/{objectName}/template/{templateId}/{objectId}/` to create a Draft inside Object (added if missing)
+1.  `PUT /object/x/template/{templateId}/{objectId}/` to create a Draft inside Object (added if missing)
 
 You cannot **update** objects or object versions directly.  
 
-1.  `PUT /object/{objectName}/{objectId}/draft/{draftId}/` to publish Draft to Object (append to version chain)
-2.  `PUT /object/{objectName}/{objectId}/version/{version}/` to revert Object to version (trim version chain)
+1.  `PUT /object/x/{objectId}/draft/{draftId}/` to publish Draft to Object (append to version chain)
+2.  `PUT /object/x/{objectId}/version/{version}/` to revert Object to version (trim version chain)
 
 Drafts are discarded after publishing.  
 Schemas can only be created and modified in Templates.
@@ -45,10 +45,10 @@ Schemas can only be created and modified in Templates.
 
 Data migration is the same as user input so it must be handled at the application level, not at the API level:  
 
-1.  `POST | GET /object/{objectName}/template/{templateId}/` - (once) Prepare new schema and default data
-2.  `GET /object/{objectName}/{objectId}/` - Fetch current object data, schema and schema ID
+1.  `POST | GET /object/x/template/{templateId}/` - (once) Prepare new schema and default data
+2.  `GET /object/x/{objectId}/` - Fetch current object data, schema and schema ID
 3.  Inside application - migrate data using #1 and #2
-4.  `PUT /object/{objectName}/template/{templateId}/{objectId}/` with **publish=true** - Update Object with new data & schema
+4.  `PUT /object/x/template/{templateId}/{objectId}/` with **publish=true** - Update Object with new data & schema
 
 Applications should display any schema.  
 Data migration should be performed on user request.
@@ -62,6 +62,9 @@ Define branch structure using cardinality; use exclamation mark (`!`) for 1:
 2.  **one-to-many** Example: `/tree/organization!/team`
 3.  **many-to-one** Example: `/tree/user/!level`
 4.  **one-to-one** Example: `/tree/user!/!logo`
+
+**Note**: the exclamation mark syntax is only used inside the `config.yaml` file to define cardinality; 
+final REST API endpoints use only the pre-defined object names, i.e. `/tree/user/logo` instead of `/tree/user!/!logo`.
 
 ## Sample output
 
