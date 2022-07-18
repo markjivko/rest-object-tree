@@ -46,22 +46,12 @@ Data migration should be performed on user request.
 * * *
 
 **Trees** define relationships between Objects.  
-Assign trees using cardinality; use exclamation mark (`!`) for 1:
+Define branch structure using cardinality; use exclamation mark (`!`) for 1:
 
 1.  **many-to-many** Example: `/tree/team/user`
 2.  **one-to-many** Example: `/tree/organization!/team`
-3.  **many-to-one** Example: `/tree/user/level!`
-4.  **one-to-one** Example: `/tree/user!/logo!`
-
-Trees endpoints example:
-
-1.  `/organization!/team` - Teams are assigned to only one organization
-2.  `/organization/team!/team` - Teams can have at most 1 parent
-3.  **Note:** you cannot register a new `team` tree (at #2) if the `team` is not present in #1!
-4.  In other words, if parent roots are defined, they must exist before adding branches
-5.  In this example, you can only parent teams that are part of the same organization
-  
-Removing an **Object** deletes all associated **Trees**.
+3.  **many-to-one** Example: `/tree/user/!level`
+4.  **one-to-one** Example: `/tree/user!/!logo`
 
 ## Sample output
 
