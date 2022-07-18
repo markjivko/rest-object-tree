@@ -4,7 +4,7 @@
 
 ### 1.1. Generate
 
-Prepare the new `rest/api/openapi.yaml` specification and generate the REST API source code.
+Prepare the new `openapi.yaml` specification and generate the REST API server source code.
 
 ```
 npm run generate
@@ -14,9 +14,11 @@ You can easily define objects and tree branches in `config/config.yaml`.
 
 Choose one of the predefined generators or create a new one in `src/generator/*.js`.
 
+This project uses `.mustache` files as templates.
+
 ### 1.2. Serve
 
-Launch the REST API and its documentation:
+Launch the REST API and its OpenAPI v3 documentation:
 
 ```
 npm run serve
@@ -59,15 +61,15 @@ Data migration should be performed on user request.
 
 **Trees** define relationships between Objects.  
 
-Configure the branch structure using cardinality; use exclamation mark (`!`) for 1:
+Configure the branch structure using cardinality. Use exclamation mark (`!`) for 1:
 
 1.  **many-to-many** Example: `/tree/team/user`
 2.  **one-to-many** Example: `/tree/organization!/team`
 3.  **many-to-one** Example: `/tree/user/!level`
 4.  **one-to-one** Example: `/tree/user!/!logo`
 
-**Note**: the exclamation mark syntax is only used inside the `config.yaml` file to define cardinality; 
-final REST API endpoints use only the pre-defined object names, i.e. `/tree/user/logo` instead of `/tree/user!/!logo`.
+**Note**: the exclamation mark syntax is only used inside the `config.yaml` file to define cardinality! 
+Final REST API endpoints use only the pre-defined object names, i.e. `/tree/user/logo` instead of `/tree/user!/!logo`.
 
 ## 3. Sample output
 
