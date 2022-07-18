@@ -1,0 +1,399 @@
+'use strict';
+
+/**
+ * REST Object Service
+ * 
+ * @desc      Object service methods
+ * @copyright {{&extra.copyright}} 
+ * @desc      {{&info.description}}
+ * @author    {{&info.contact.name}} - {{&info.contact.url}}
+ * @version   {{&info.version}}
+ * @license   {{&info.license.name}} - {{&info.license.url}}
+ */
+
+/**
+ * Create a new template
+ *
+ * @param {string} objectName Object Name
+ * @param {object} data       JSON object; Default data used when creating new Drafts
+ * @param {object} schema     Schema used when creating new Drafts
+ */
+exports.templateUpdate = function (objectName, data, schema) {
+    return new Promise(function (resolve, reject) {
+        resolve();
+    });
+};
+
+/**
+ * Use template to create a draft inside object (create draft / create object)
+ * Create <b>draft</b> inside an object.<br/> If object with <b>{objectId}</b> doesn't exits, 
+ * it is created as empty, i.e. data = <b>{}</b>, schema = <b>{}</b>, version = <b>0</b>.<br/> 
+ * If <b>publish</b> is set to <b>true</b>, the Draft object is skipped and the Draft data is automatically 
+ * published to the object. 
+ *
+ * @param {string}  objectName Object Name
+ * @param {int}     templateId Template ID
+ * @param {string}  objectId   Draft parent Object ID
+ * @param {boolean} publish    (optional) Automatically publish Draft to object
+ * @param {object}  data       (optional) JSON object; Draft data - replaces the (default) data value stored in the template
+ * @returns Draft
+ */
+exports.templateUse = function (objectName, templateId, objectId, publish, data) {
+    return new Promise(function (resolve, reject) {
+        var examples = {};
+        examples['application/json'] = {
+            "schema": {},
+            "draftId": 1,
+            "data": {},
+            "objectId": ""
+        };
+        if (Object.keys(examples).length > 0) {
+            resolve(examples[Object.keys(examples)[0]]);
+        } else {
+            resolve();
+        }
+    });
+};
+
+/**
+ * Delete all drafts for this object
+ *
+ * @param {string} objectName Object Name
+ * @param {string} objectId   Object ID
+ */
+exports.draftDeleteAll = function (objectName, objectId) {
+    return new Promise(function (resolve, reject) {
+        resolve();
+    });
+};
+
+/**
+ * Delete all templates
+ *
+ * @param {string} objectName Object Name
+ */
+exports.templateDeleteAll = function (objectName) {
+    return new Promise(function (resolve, reject) {
+        resolve();
+    });
+};
+
+/**
+ * Delete object and all its drafts and versions
+ *
+ * @param {string} objectName Object Name
+ * @param {string} objectId   Object ID
+ */
+exports.delete = function (objectName, objectId) {
+    return new Promise(function (resolve, reject) {
+        resolve();
+    });
+};
+
+/**
+ * Delete draft of object
+ *
+ * @param {string} objectName Object Name
+ * @param {string} objectId   Object ID
+ * @param {int}    draftId    Draft ID
+ */
+exports.draftDelete = function (objectName, objectId, draftId) {
+    return new Promise(function (resolve, reject) {
+        resolve();
+    });
+};
+
+/**
+ * Delete object template
+ *
+ * @param {string} objectName Object Name
+ * @param {int}    templateId Template ID
+ */
+exports.templateDelete = function (objectName, templateId) {
+    return new Promise(function (resolve, reject) {
+        resolve();
+    });
+};
+
+/**
+ * Get object at latest version
+ *
+ * @param {string} objectName Object Name
+ * @param {string} objectId   Object ID
+ * @returns Object
+ */
+exports.read = function (objectName, objectId) {
+    return new Promise(function (resolve, reject) {
+        var examples = {};
+        examples['application/json'] = {
+            "schema": {},
+            "data": {},
+            "version": "",
+            "objectId": "1cea34a9"
+        };
+        if (Object.keys(examples).length > 0) {
+            resolve(examples[Object.keys(examples)[0]]);
+        } else {
+            resolve();
+        }
+    });
+};
+
+/**
+ * Get draft details
+ *
+ * @param {string} objectName Object Name
+ * @param {string} objectId   Object ID
+ * @param {int}    draftId    Draft ID
+ * @returns Draft
+ */
+exports.draftRead = function (objectName, objectId, draftId) {
+    return new Promise(function (resolve, reject) {
+        var examples = {};
+        examples['application/json'] = {
+            "schema": {},
+            "draftId": 1,
+            "data": {},
+            "objectId": ""
+        };
+        if (Object.keys(examples).length > 0) {
+            resolve(examples[Object.keys(examples)[0]]);
+        } else {
+            resolve();
+        }
+    });
+};
+
+/**
+ * Get a paginated list of drafts; the <b>total</b> number of drafts is always specified in the result
+ *
+ * @param {string} objectName Object Name
+ * @param {string} objectId   Object ID
+ * @param {int}    listSize   (optional) List size; default <b>0</b>
+ * @param {int}    listOffset (optional) List offset; default <b>0</b>
+ * @returns DraftList
+ */
+exports.draftList = function (objectName, objectId, listSize, listOffset) {
+    return new Promise(function (resolve, reject) {
+        var examples = {};
+        examples['application/json'] = {
+            "total": 30,
+            "list": [{
+                "schema": {},
+                "draftId": 1,
+                "data": {},
+                "objectId": ""
+            }, {
+                "schema": {},
+                "draftId": 1,
+                "data": {},
+                "objectId": ""
+            }]
+        };
+        if (Object.keys(examples).length > 0) {
+            resolve(examples[Object.keys(examples)[0]]);
+        } else {
+            resolve();
+        }
+    });
+};
+
+/**
+ * Get a paginated list of objects; the <b>total</b> number of objects is always specified in the result
+ *
+ * @param {string} objectName Object Name
+ * @param {int}    listSize   (optional) List size; default <b>0</b>
+ * @param {int}    listOffset (optional) List offset; default <b>0</b>
+ * @returns ObjectList
+ */
+exports.list = function (objectName, listSize, listOffset) {
+    return new Promise(function (resolve, reject) {
+        var examples = {};
+        examples['application/json'] = {
+            "total": 21,
+            "list": [{
+                "schema": {},
+                "data": {},
+                "version": "",
+                "objectId": "1cea34a9"
+            }, {
+                "schema": {},
+                "data": {},
+                "version": "",
+                "objectId": "1cea34a9"
+            }]
+        };
+        if (Object.keys(examples).length > 0) {
+            resolve(examples[Object.keys(examples)[0]]);
+        } else {
+            resolve();
+        }
+    });
+};
+
+/**
+ * Get template details
+ *
+ * @param {string} objectName Object Name
+ * @param {int}    templateId Template ID
+ * @returns Template
+ */
+exports.templateRead = function (objectName, templateId) {
+    return new Promise(function (resolve, reject) {
+        var examples = {};
+        examples['application/json'] = {
+            "schema": {},
+            "data": {},
+            "templateVersion": 1,
+            "templateId": 3
+        };
+        if (Object.keys(examples).length > 0) {
+            resolve(examples[Object.keys(examples)[0]]);
+        } else {
+            resolve();
+        }
+    });
+};
+
+/**
+ * Get a paginated list of templates; the <b>total</b> number of templates is always specified in the result
+ *
+ * @param {string} objectName Object Name
+ * @param {int}    listSize   (optional) List size; default <b>0</b>
+ * @param {int}    listOffset (optional) List offset; default <b>0</b>
+ * @returns TemplateList
+ */
+exports.templateList = function (objectName, listSize, listOffset) {
+    return new Promise(function (resolve, reject) {
+        var examples = {};
+        examples['application/json'] = {
+            "total": 10,
+            "list": [{
+                "schema": {},
+                "data": {},
+                "templateVersion": 1,
+                "templateId": 3
+            }, {
+                "schema": {},
+                "data": {},
+                "templateVersion": 1,
+                "templateId": 3
+            }]
+        };
+        if (Object.keys(examples).length > 0) {
+            resolve(examples[Object.keys(examples)[0]]);
+        } else {
+            resolve();
+        }
+    });
+};
+
+/**
+ * Get object details at specified version<br/>The <b>total</b> number of versions is always the same as 
+ * the object's <b>current</b> version number.<br/> 
+ * The versioning chain is gapless and branchless i.e. a treeed list, not a tree.
+ *
+ * @param {string} objectName Object Name
+ * @param {string} objectId   Object ID
+ * @param {int}    version    Version number
+ * @returns Object
+ */
+exports.versionRead = function (objectName, objectId, version) {
+    return new Promise(function (resolve, reject) {
+        var examples = {};
+        examples['application/json'] = {
+            "schema": {},
+            "data": {},
+            "version": "",
+            "objectId": "1cea34a9"
+        };
+        if (Object.keys(examples).length > 0) {
+            resolve(examples[Object.keys(examples)[0]]);
+        } else {
+            resolve();
+        }
+    });
+};
+
+/**
+ * Publish draft to object (update object / append to version chain)
+ * Copy draft details (data & schema) to parent object, adding another tree to the versioning chain.
+ * <b>Delete</b> draft after publication. 
+ *
+ * @param {string} objectName Object Name
+ * @param {string} objectId   Object ID
+ * @param {int}    draftId    Draft ID
+ * @returns Object
+ */
+exports.draftUse = function (objectName, objectId, draftId) {
+    return new Promise(function (resolve, reject) {
+        var examples = {};
+        examples['application/json'] = {
+            "schema": {},
+            "data": {},
+            "version": "",
+            "objectId": "1cea34a9"
+        };
+        if (Object.keys(examples).length > 0) {
+            resolve(examples[Object.keys(examples)[0]]);
+        } else {
+            resolve();
+        }
+    });
+};
+
+/**
+ * Revert object to version (update object / trim version chain)
+ * Move the versioning HEAD to the specified point, discarding the rest of the chain.
+ *
+ * @param {string} objectName Object Name
+ * @param {string} objectId   Object ID
+ * @param {int}    version    Version number
+ * @returns Object
+ */
+exports.versionUse = function (objectName, objectId, version) {
+    return new Promise(function (resolve, reject) {
+        var examples = {};
+        examples['application/json'] = {
+            "schema": {},
+            "data": {},
+            "version": "",
+            "objectId": "1cea34a9"
+        };
+        if (Object.keys(examples).length > 0) {
+            resolve(examples[Object.keys(examples)[0]]);
+        } else {
+            resolve();
+        }
+    });
+};
+
+/**
+ * Update an existing draft for object
+ *
+ * @param {string} objectName Object Name
+ * @param {string} objectId Object ID
+ * @param {int}    draftId  Draft ID
+ * @param {object} data JSON object; Draft Data - overrides default template data
+ */
+exports.draftUpdate = function (objectName, objectId, draftId, data) {
+    return new Promise(function (resolve, reject) {
+        resolve();
+    });
+};
+
+/**
+ * Update a template and increment its {templateId}
+ *
+ * @param {string} objectName Object Name
+ * @param {int}    templateId Template ID
+ * @param {object} data JSON object; Default data used when creating new Drafts
+ * @param {object} schema Schema used when creating new Drafts
+ */
+exports.templateUpdate = function (objectName, templateId, data, schema) {
+    return new Promise(function (resolve, reject) {
+        resolve();
+    });
+};
+
+/* EOF */

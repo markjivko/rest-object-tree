@@ -1,0 +1,35 @@
+'use strict';
+
+/**
+ * REST Object Tree - Entry point
+ * 
+ * @desc      Documentation and REST API entry point
+ * @copyright {{&extra.copyright}} 
+ * @desc      {{&info.description}}
+ * @author    {{&info.contact.name}} - {{&info.contact.url}}
+ * @version   {{&info.version}}
+ * @license   {{&info.license.name}} - {{&info.license.url}}
+ */
+ 
+const path = require('path');
+const http = require('http');
+const oas3Tools = require('oas3-tools');
+const serverPort = 8181;
+
+// Prepare the application configuration
+const expressAppConfig = oas3Tools.expressAppConfig(
+    path.join(__dirname, 'api/openapi.yaml'), {
+        routing: {
+            controllers: path.join(__dirname, 'controller')
+        },
+    }
+);
+const app = expressAppConfig.getApp();
+
+// Initialize the Swagger middleware
+http.createServer(app).listen(serverPort, function () {
+    console.log('> Your server is listening on port %d (http://localhost:%d)', serverPort, serverPort);
+    console.log('> Documentation is available on http://localhost:%d/docs', serverPort);
+});
+
+/* EOF */

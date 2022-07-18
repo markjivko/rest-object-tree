@@ -1,0 +1,72 @@
+##
+# OpenAPI information block
+##
+info:
+  version: 0.0.1
+  title: REST Object Tree Generator
+  description: OpenAPI v3 generator for a simple REST API with Objects placed on a Tree
+  contact: 
+    name: Mark Jivko
+    url: "https://github.com/markjivko/rest-object-tree"
+  license: 
+    name: Apache 2.0
+    url: "https://www.apache.org/licenses/LICENSE-2.0.html"
+
+##
+# Extra project details
+##
+extra:
+  copyright: WNBBOX AB
+
+##
+# REST API Objects
+##
+object:
+  app: 
+    name: "Application"
+    description: "Each object stores application details"
+  flag-productive: 
+    name: "Flag - productive"
+    description:  "Flag used to describe the use of an application; depends on role"
+  organization:
+    name: "Organization"
+    description: "Each object stores organization details"
+  team:
+    name: "Team"
+    description: "Each object stores information related to teams"
+  device: 
+    name: "Device"
+    description: "Each object stores device information"
+  role: 
+    name: "User role"
+    description: "Object that describes user roles within teams and organizations"
+  user:
+    name: "User"
+    description: "Each object store individual user information"
+  report: 
+    name: "Report"
+    description: "Each object points to a specific report generated for users"
+
+##
+# REST API Tree
+# 
+# Define the object tree with a list of allowed branches
+# To declare cardinality for each node in the branch, use this syntax: 
+#   many-to-many: "a  /  b"
+#   many-to-one:  "a  /! b"
+#   one-to-many:  "a !/  b"
+#   one-to-one:   "a !/! b"
+##
+tree:
+  organization!/team: "Teams belong to only one Organization"
+
+  organization/user: "Users can belong to multiple Organizations"
+  organization/role: "Roles can be defined at the Organization level"
+  organization/role/flag-productive!/app: "Flag: productive can be set at the Organization level"
+
+  team/user: "Users can belong to multiple Teams"
+  team/user/role: "Multiple Users can have the same Role"
+  team/role/flag-productive!/app: "Flag: productive can be set at the Team level"
+
+  user/device: "Devices can belong to multiple Users"
+  user/role/flag-productive!/app: "Flag: productive can be set at the User level"

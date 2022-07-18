@@ -1,0 +1,1263 @@
+{
+    "openapi": "3.0.0",
+    "info": {},
+    "servers": [
+        {
+            "url": "http://localhost:8181"
+        }
+    ],
+    "tags": [
+        {{#objects}}
+        {
+            "name": "Object: {{&object.name}}",
+            "description": "{{&object.description}}"
+        },
+        {{/objects}}
+        {{#branches}}
+        {
+            "name": "Tree: {{&branch.path}}",
+            "description": "{{&branch.description}}"
+        }{{^branch.last}},{{/branch.last}}
+        {{/branches}}
+    ],
+    "paths": {
+    {{#objects}}
+        "/object/{{object.key}}/list": {
+            "get": {
+                "tags": [
+                    "Object: {{&object.name}}"
+                ],
+                "summary": "Get list of {{&object.name}} objects",
+                "description": "Get a paginated list of {{&object.name}} objects; the <b>total</b> number of objects is always specified in the result",
+                "operationId": "objectList{{object.method}}",
+                "parameters": [
+                    {
+                        "name": "list-size",
+                        "in": "query",
+                        "description": "List size",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "schema": {
+                            "minimum": 0,
+                            "type": "integer",
+                            "format": "int64",
+                            "default": 0
+                        }
+                    },
+                    {
+                        "name": "list-offset",
+                        "in": "query",
+                        "description": "List offset",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "schema": {
+                            "minimum": 0,
+                            "type": "integer",
+                            "format": "int64",
+                            "default": 0
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ObjectList"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid list parameters"
+                    }
+                },
+                "x-swagger-router-controller": "Object"
+            }
+        },
+        "/object/{{object.key}}/{objectId}": {
+            "get": {
+                "tags": [
+                    "Object: {{&object.name}}"
+                ],
+                "summary": "Read {{&object.name}} object",
+                "description": "Get {{&object.name}} object at latest version",
+                "operationId": "objectRead{{object.method}}",
+                "parameters": [
+                    {
+                        "name": "objectId",
+                        "in": "path",
+                        "description": "Object ID",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid object id"
+                    },
+                    "404": {
+                        "description": "Object not found"
+                    }
+                },
+                "x-swagger-router-controller": "Object"
+            },
+            "delete": {
+                "tags": [
+                    "Object: {{&object.name}}"
+                ],
+                "summary": "Delete {{&object.name}} object",
+                "description": "Delete {{&object.name}} object and all its drafts and versions",
+                "operationId": "objectDelete{{object.method}}",
+                "parameters": [
+                    {
+                        "name": "objectId",
+                        "in": "path",
+                        "description": "Object ID",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid Object id"
+                    },
+                    "404": {
+                        "description": "Object not found"
+                    }
+                },
+                "x-swagger-router-controller": "Object"
+            }
+        },
+        "/object/{{object.key}}/{objectId}/version/{version}": {
+            "get": {
+                "tags": [
+                    "Object: {{&object.name}}"
+                ],
+                "summary": "Get {{&object.name}} object at version",
+                "description": "Get {{&object.name}} object details at specified version<br/>The <b>total</b> number of versions is always the same as the object's <b>current</b> version number.<br/>\nThe versioning chain is gapless and branchless i.e. a treeed list, not a tree.",
+                "operationId": "objectVersionRead{{object.method}}",
+                "parameters": [
+                    {
+                        "name": "objectId",
+                        "in": "path",
+                        "description": "Object ID",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "version",
+                        "in": "path",
+                        "description": "Version number",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "minimum": 1,
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid object id or version number"
+                    },
+                    "404": {
+                        "description": "Object or version not found"
+                    }
+                },
+                "x-swagger-router-controller": "Object"
+            },
+            "put": {
+                "tags": [
+                    "Object: {{&object.name}}"
+                ],
+                "summary": "Revert {{&object.name}} object to version",
+                "description": "Create a new version for {{&object.name}} object by copying from the specified checkpoint; the HEAD is always incremented",
+                "operationId": "objectVersionUse{{object.method}}",
+                "parameters": [
+                    {
+                        "name": "objectId",
+                        "in": "path",
+                        "description": "Object ID",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "version",
+                        "in": "path",
+                        "description": "Version number",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "minimum": 1,
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation - return the updated object",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid Object id or version number"
+                    },
+                    "404": {
+                        "description": "Object or version not found"
+                    }
+                },
+                "x-swagger-router-controller": "Object"
+            }
+        },
+        "/object/{{object.key}}/{objectId}/draft": {
+            "delete": {
+                "tags": [
+                    "Object: {{&object.name}}"
+                ],
+                "summary": "Delete all {{&object.name}} drafts",
+                "description": "Delete all drafts for this {{&object.name}} object",
+                "operationId": "objectDraftDeleteAll{{object.method}}",
+                "parameters": [
+                    {
+                        "name": "objectId",
+                        "in": "path",
+                        "description": "Object ID",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid Object id"
+                    }
+                },
+                "x-swagger-router-controller": "Object"
+            }
+        },
+        "/object/{{object.key}}/{objectId}/draft/list": {
+            "get": {
+                "tags": [
+                    "Object: {{&object.name}}"
+                ],
+                "summary": "List {{&object.name}} drafts",
+                "description": "Get a paginated list of {{&object.name}} drafts; the <b>total</b> number of drafts is always specified in the result",
+                "operationId": "objectDraftList{{object.method}}",
+                "parameters": [
+                    {
+                        "name": "objectId",
+                        "in": "path",
+                        "description": "Object ID",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "list-size",
+                        "in": "query",
+                        "description": "List size",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "schema": {
+                            "minimum": 0,
+                            "type": "integer",
+                            "format": "int64",
+                            "default": 0
+                        }
+                    },
+                    {
+                        "name": "list-offset",
+                        "in": "query",
+                        "description": "List offset",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "schema": {
+                            "minimum": 0,
+                            "type": "integer",
+                            "format": "int64",
+                            "default": 0
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DraftList"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid list parameters"
+                    }
+                },
+                "x-swagger-router-controller": "Object"
+            }
+        },
+        "/object/{{object.key}}/{objectId}/draft/{draftId}": {
+            "get": {
+                "tags": [
+                    "Object: {{&object.name}}"
+                ],
+                "summary": "Get {{&object.name}} draft",
+                "description": "Get {{&object.name}} draft details",
+                "operationId": "objectDraftRead{{object.method}}",
+                "parameters": [
+                    {
+                        "name": "objectId",
+                        "in": "path",
+                        "description": "Object ID",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "draftId",
+                        "in": "path",
+                        "description": "Draft ID",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "minimum": 0,
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Draft"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid Object or Draft id"
+                    },
+                    "404": {
+                        "description": "Draft not found"
+                    }
+                },
+                "x-swagger-router-controller": "Object"
+            },
+            "put": {
+                "tags": [
+                    "Object: {{&object.name}}"
+                ],
+                "summary": "Publish draft to {{&object.name}} object",
+                "description": "Copy draft details (data & schema) to parent {{&object.name}} object, adding another tree to the versioning chain.<br/>\n<b>Delete</b> draft after publication.\n",
+                "operationId": "objectDraftUse{{object.method}}",
+                "parameters": [
+                    {
+                        "name": "objectId",
+                        "in": "path",
+                        "description": "Object ID",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "draftId",
+                        "in": "path",
+                        "description": "Draft ID",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "minimum": 0,
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation - return the updated object",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid Object or Draft id"
+                    },
+                    "404": {
+                        "description": "Draft not found"
+                    }
+                },
+                "x-swagger-router-controller": "Object"
+            },
+            "post": {
+                "tags": [
+                    "Object: {{&object.name}}"
+                ],
+                "summary": "Update {{&object.name}} draft",
+                "description": "Update an existing draft for {{&object.name}} object",
+                "operationId": "objectDraftUpdate{{object.method}}",
+                "parameters": [
+                    {
+                        "name": "objectId",
+                        "in": "path",
+                        "description": "Object ID",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "draftId",
+                        "in": "path",
+                        "description": "Draft ID",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "minimum": 0,
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "data",
+                        "in": "query",
+                        "description": "Draft Data - overrides default template data",
+                        "required": true,
+                        "style": "form",
+                        "explode": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid Object or Draft id"
+                    },
+                    "404": {
+                        "description": "Draft not found"
+                    }
+                },
+                "x-swagger-router-controller": "Object"
+            },
+            "delete": {
+                "tags": [
+                    "Object: {{&object.name}}"
+                ],
+                "summary": "Delete {{&object.name}} draft",
+                "description": "Delete draft of {{&object.name}} object",
+                "operationId": "objectDraftDelete{{object.method}}",
+                "parameters": [
+                    {
+                        "name": "objectId",
+                        "in": "path",
+                        "description": "Object ID",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "draftId",
+                        "in": "path",
+                        "description": "Draft ID",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "minimum": 0,
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid Object or Draft id"
+                    },
+                    "404": {
+                        "description": "Draft not found"
+                    }
+                },
+                "x-swagger-router-controller": "Object"
+            }
+        },
+        "/object/{{object.key}}/template": {
+            "post": {
+                "tags": [
+                    "Object: {{&object.name}}"
+                ],
+                "summary": "Create a new {{&object.name}} template",
+                "description": "Create a new {{&object.name}} template",
+                "operationId": "objectTemplateCreate{{object.method}}",
+                "parameters": [
+                    {
+                        "name": "data",
+                        "in": "query",
+                        "description": "Default data used when creating new Drafts",
+                        "required": true,
+                        "style": "form",
+                        "explode": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "schema",
+                        "in": "query",
+                        "description": "Schema used when creating new Drafts",
+                        "required": true,
+                        "style": "form",
+                        "explode": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid Template"
+                    }
+                },
+                "x-swagger-router-controller": "Object"
+            },
+            "delete": {
+                "tags": [
+                    "Object: {{&object.name}}"
+                ],
+                "summary": "Delete all {{&object.name}} templates",
+                "description": "Delete all {{&object.name}} templates",
+                "operationId": "objectTemplateDeleteAll{{object.method}}",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    }
+                },
+                "x-swagger-router-controller": "Object"
+            }
+        },
+        "/object/{{object.key}}/template/list": {
+            "get": {
+                "tags": [
+                    "Object: {{&object.name}}"
+                ],
+                "summary": "List {{&object.name}} templates",
+                "description": "Get a paginated list of {{&object.name}} templates; the <b>total</b> number of templates is always specified in the result",
+                "operationId": "objectTemplateList{{object.method}}",
+                "parameters": [
+                    {
+                        "name": "list-size",
+                        "in": "query",
+                        "description": "List size",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "schema": {
+                            "minimum": 0,
+                            "type": "integer",
+                            "format": "int64",
+                            "default": 0
+                        }
+                    },
+                    {
+                        "name": "list-offset",
+                        "in": "query",
+                        "description": "List offset",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "schema": {
+                            "minimum": 0,
+                            "type": "integer",
+                            "format": "int64",
+                            "default": 0
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TemplateList"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid list parameters"
+                    }
+                },
+                "x-swagger-router-controller": "Object"
+            }
+        },
+        "/object/{{object.key}}/template/{templateId}": {
+            "get": {
+                "tags": [
+                    "Object: {{&object.name}}"
+                ],
+                "summary": "Get {{&object.name}} template",
+                "description": "Get {{&object.name}} template details",
+                "operationId": "objectTemplateRead{{object.method}}",
+                "parameters": [
+                    {
+                        "name": "templateId",
+                        "in": "path",
+                        "description": "Template ID",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "minimum": 1,
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Template"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid Template id"
+                    },
+                    "404": {
+                        "description": "Template not found"
+                    }
+                },
+                "x-swagger-router-controller": "Object"
+            },
+            "post": {
+                "tags": [
+                    "Object: {{&object.name}}"
+                ],
+                "summary": "Update {{&object.name}} template",
+                "description": "Update {{&object.name}} template",
+                "operationId": "objectTemplateUpdate{{object.method}}",
+                "parameters": [
+                    {
+                        "name": "templateId",
+                        "in": "path",
+                        "description": "Template ID",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "minimum": 1,
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "data",
+                        "in": "query",
+                        "description": "Default data used when creating new Drafts",
+                        "required": true,
+                        "style": "form",
+                        "explode": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "schema",
+                        "in": "query",
+                        "description": "Schema used when creating new Drafts",
+                        "required": true,
+                        "style": "form",
+                        "explode": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid Template"
+                    }
+                },
+                "x-swagger-router-controller": "Object"
+            },
+            "delete": {
+                "tags": [
+                    "Object: {{&object.name}}"
+                ],
+                "summary": "Delete {{&object.name}} template",
+                "description": "Delete {{&object.name}} template",
+                "operationId": "objectTemplateDelete{{object.method}}",
+                "parameters": [
+                    {
+                        "name": "templateId",
+                        "in": "path",
+                        "description": "Template ID",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "minimum": 1,
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid Template id"
+                    },
+                    "404": {
+                        "description": "Template not found"
+                    }
+                },
+                "x-swagger-router-controller": "Object"
+            }
+        },
+        "/object/{{object.key}}/template/{templateId}/{objectId}": {
+            "put": {
+                "tags": [
+                    "Object: {{&object.name}}"
+                ],
+                "summary": "Use template to create a draft inside {{&object.name}} object",
+                "description": "Create <b>draft</b> inside of {{&object.name}} object.<br/>\nIf object with <b>{objectId}</b> doesn't exits, it is created as empty, i.e. data = <b>{}</b>, schema = <b>{}</b>, version = <b>0</b>.<br/>\nIf <b>publish</b> is set to <b>true</b>, the Draft object is skipped and the Draft data is automatically published to the object.\n",
+                "operationId": "objectTemplateUse{{object.method}}",
+                "parameters": [
+                    {
+                        "name": "templateId",
+                        "in": "path",
+                        "description": "Template ID",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "minimum": 1,
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    },
+                    {
+                        "name": "objectId",
+                        "in": "path",
+                        "description": "Draft parent Object ID",
+                        "required": true,
+                        "style": "simple",
+                        "explode": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "publish",
+                        "in": "query",
+                        "description": "Automatically publish Draft to object",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "schema": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    },
+                    {
+                        "name": "data",
+                        "in": "query",
+                        "description": "Draft data - replaces the (default) data value stored in the template",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation - return the new <b>Draft</b> or <b>Object</b> (for <b>publish=true</b>)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Draft"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid Template id"
+                    },
+                    "404": {
+                        "description": "Template id or Object id not found"
+                    }
+                },
+                "x-swagger-router-controller": "Object"
+            }
+        },
+    {{/objects}}
+    {{#branches}}
+        "/tree/{{&branch.path}}": {
+            "get": {
+                "tags": [
+                    "Tree: {{&branch.path}}"
+                ],
+                "summary": "Fetch Objects",
+                "description": "Get Objects on branch that satisfy the ID conditions. {{&branch.cardinality}}",
+                "operationId": "treeGet{{branch.method}}",
+                "parameters": [
+                    {
+                        "name": "expand",
+                        "in": "query",
+                        "description": "Comma-separated list of objects to expand",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "example": "{{branch.objList}}"
+                    },
+                    {{#branch.args}}
+                    {
+                        "name": "{{varName}}",
+                        "in": "query",
+                        "description": "ID of {{&name}} object",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }{{^last}},{{/last}}
+                    {{/branch.args}}
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Nested list of objects, depending on which argument was provided.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Tree"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid arg parameters"
+                    }
+                },
+                "x-swagger-router-controller": "Tree"
+            },
+            "post": {
+                "tags": [
+                    "Tree: {{&branch.path}}"
+                ],
+                "summary": "Set relationship",
+                "description": "Store a relationship between objects. {{&branch.cardinality}}",
+                "operationId": "treeSet{{branch.method}}",
+                "parameters": [
+                    {{#branch.args}}
+                    {
+                        "name": "{{varName}}",
+                        "in": "query",
+                        "description": "ID of {{&name}} object",
+                        "required": true,
+                        "style": "form",
+                        "explode": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }{{^last}},{{/last}}
+                    {{/branch.args}}
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid arg parameters"
+                    }
+                },
+                "x-swagger-router-controller": "Tree"
+            },
+            "delete": {
+                "tags": [
+                    "Tree: {{&branch.path}}"
+                ],
+                "summary": "Remove relationship",
+                "description": "Delete a relation between Objects. {{&branch.cardinality}}",
+                "operationId": "treeDelete{{branch.method}}",
+                "parameters": [
+                    {{#branch.args}}
+                    {
+                        "name": "{{varName}}",
+                        "in": "query",
+                        "description": "ID of {{&name}} object",
+                        "required": false,
+                        "style": "form",
+                        "explode": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }{{^last}},{{/last}}
+                    {{/branch.args}}
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid arg parameters"
+                    }
+                },
+                "x-swagger-router-controller": "Tree"
+            }
+        }{{^branch.last}},{{/branch.last}}
+    {{/branches}}
+    },
+    "components": {
+        "schemas": {
+            "TemplateId": {
+                "minimum": 1,
+                "type": "integer",
+                "description": "Any arbitrary URL-compliant string",
+                "format": "int64",
+                "example": 3
+            },
+            "ObjectId": {
+                "type": "string",
+                "description": "Any arbitrary URL-compliant string",
+                "example": "1cea34a9"
+            },
+            "DraftId": {
+                "minimum": 1,
+                "type": "integer",
+                "description": "Natural number<br/>\n⬆️ Auto-incremented by <b>PUT /object/{objectName}/template/{templateId}</b>\n",
+                "format": "int64",
+                "example": 1
+            },
+            "VersionNumber": {
+                "minimum": 0,
+                "type": "integer",
+                "description": "Natural number<br/> The version list is always gapless and uni-dimensional (treeed list, not tree)<br/> Object.version is always the HEAD of the list (largest version number)<br/> ⬆️ Auto-incremented by <b>PUT /object/{objectName}/{objectId}/draft/{templateId}</b>\n",
+                "format": "int64",
+                "example": 0
+            },
+            "Template": {
+                "type": "object",
+                "properties": {
+                    "templateId": {
+                        "$ref": "#/components/schemas/TemplateId"
+                    },
+                    "templateVersion": {
+                        "minimum": 1,
+                        "type": "integer",
+                        "description": "Template version; auto-incremented on update",
+                        "format": "int64"
+                    },
+                    "data": {
+                        "type": "object",
+                        "description": "Template data used to create new Drafts"
+                    },
+                    "schema": {
+                        "type": "object",
+                        "description": "Template schema used to create new Drafts"
+                    }
+                },
+                "description": "REST API entry-point. Templates create Drafts",
+                "example": {
+                    "schema": {},
+                    "data": {},
+                    "templateVersion": 1,
+                    "templateId": 3
+                }
+            },
+            "Object": {
+                "type": "object",
+                "properties": {
+                    "objectId": {
+                        "$ref": "#/components/schemas/ObjectId"
+                    },
+                    "version": {
+                        "description": "Version history HEAD (natural number)",
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/VersionNumber"
+                            }
+                        ]
+                    },
+                    "data": {
+                        "type": "object",
+                        "description": "Object data supplied by Draft (read-only, versioned)"
+                    },
+                    "schema": {
+                        "type": "object",
+                        "description": "Object schema supplied by Draft (read-only, versioned)<br/> Includes schema ID, formed as '{templateId}-{templateVersion}'\n"
+                    }
+                },
+                "description": "Objects hold multiple Drafts and Versions",
+                "example": {
+                    "schema": {},
+                    "data": {},
+                    "version": "",
+                    "objectId": "1cea34a9"
+                }
+            },
+            "Draft": {
+                "type": "object",
+                "properties": {
+                    "draftId": {
+                        "$ref": "#/components/schemas/DraftId"
+                    },
+                    "objectId": {
+                        "description": "Parent object ID",
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ObjectId"
+                            }
+                        ]
+                    },
+                    "data": {
+                        "type": "object",
+                        "description": "Draft data supplied by Template"
+                    },
+                    "schema": {
+                        "type": "object",
+                        "description": "Draft schema supplied by Template (read-only)<br/> Includes schema ID, formed as '{templateId}-{templateVersion}'\n"
+                    }
+                },
+                "description": "Drafts are used to update Objects, appending to their history",
+                "example": {
+                    "schema": {},
+                    "draftId": 1,
+                    "data": {},
+                    "objectId": ""
+                }
+            },
+            "TemplateList": {
+                "type": "object",
+                "properties": {
+                    "list": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Template"
+                        }
+                    },
+                    "total": {
+                        "minimum": 0,
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 10
+                    }
+                },
+                "description": "List of available Templates; the total number of Templates is always provided",
+                "example": {
+                    "total": 10,
+                    "list": [
+                        {
+                            "schema": {},
+                            "data": {},
+                            "templateVersion": 1,
+                            "templateId": 3
+                        },
+                        {
+                            "schema": {},
+                            "data": {},
+                            "templateVersion": 1,
+                            "templateId": 3
+                        }
+                    ]
+                }
+            },
+            "ObjectList": {
+                "type": "object",
+                "properties": {
+                    "list": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Object"
+                        }
+                    },
+                    "total": {
+                        "minimum": 0,
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 20
+                    }
+                },
+                "description": "List of available Objects; the total number of Objects is always provided",
+                "example": {
+                    "total": 20,
+                    "list": [
+                        {
+                            "schema": {},
+                            "data": {},
+                            "version": "",
+                            "objectId": "1cea34a9"
+                        },
+                        {
+                            "schema": {},
+                            "data": {},
+                            "version": "",
+                            "objectId": "1cea34a9"
+                        }
+                    ]
+                }
+            },
+            "DraftList": {
+                "type": "object",
+                "properties": {
+                    "list": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Draft"
+                        }
+                    },
+                    "total": {
+                        "minimum": 0,
+                        "type": "integer",
+                        "format": "int64",
+                        "example": 30
+                    }
+                },
+                "description": "List of avilable Drafts; the total number of Drafts is always provided",
+                "example": {
+                    "total": 30,
+                    "list": [
+                        {
+                            "schema": {},
+                            "draftId": 1,
+                            "data": {},
+                            "objectId": ""
+                        },
+                        {
+                            "schema": {},
+                            "draftId": 1,
+                            "data": {},
+                            "objectId": ""
+                        }
+                    ]
+                }
+            },
+            "Tree": {
+                "type": "object",
+                "properties": {
+                    "{objectName}": {
+                        "type": "object",
+                        "properties": {
+                            "{objectId}": {
+                                "type": "object",
+                                "properties": {
+                                    "object": {
+                                        "type": "object",
+                                        "allOf": [
+                                            {
+                                                "$ref": "#/components/schemas/Object"
+                                            }
+                                        ]
+                                    },
+                                    "children": {
+                                        "type": "object",
+                                        "allOf": [
+                                            {
+                                                "$ref": "#/components/schemas/Tree"
+                                            }
+                                        ]
+                                    }
+                                },
+                                "example": {
+                                    "children": "",
+                                    "object": ""
+                                }
+                            }
+                        }
+                    }
+                },
+                "description": "List of Objects and their children",
+                "example": {
+                    "{objectName}": {
+                        "{objectId}": {
+                            "children": "",
+                            "object": ""
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

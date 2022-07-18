@@ -1,0 +1,65 @@
+'use strict';
+
+/**
+ * REST Tree Service
+ * 
+ * @desc      Tree service methods
+ * @copyright {{&extra.copyright}} 
+ * @desc      {{&info.description}}
+ * @author    {{&info.contact.name}} - {{&info.contact.url}}
+ * @version   {{&info.version}}
+ * @license   {{&info.license.name}} - {{&info.license.url}}
+ */
+
+/**
+ * Delete a relation between Objects
+ *
+ * @param {string} branchKey Branch key
+ * @param {object} objectIds Associative array of {object key: object ID}
+ */
+exports.delete = function(branchKey, objectIds) {
+    return new Promise(function(resolve, reject) {
+        resolve();
+    });
+};
+
+/**
+ * Get Objects on branch that satisfy the ID conditions
+ *
+ * @param {string} branchKey Branch key
+ * @param {object} objectIds Associative array of {object key: object ID}
+ * @returns {Tree}
+ */
+exports.get = function(branchKey, objectIds) {
+    return new Promise(function(resolve, reject) {
+        var examples = {};
+        examples['application/json'] = {
+            "{objectName}" : {
+                "{objectId}" : {
+                    "children" : "",
+                    "object" : ""
+                }
+            }
+        };
+
+        if (Object.keys(examples).length > 0) {
+            resolve(examples[Object.keys(examples)[0]]);
+        } else {
+            resolve();
+        }
+    });
+};
+
+/**
+ * Store a relation between Objects
+ *
+ * @param {string} branchKey Branch key
+ * @param {object} objectIds Associative array of {object key: object ID}
+ */
+exports.set = function(branchKey, objectIds) {
+    return new Promise(function(resolve, reject) {
+        resolve();
+    });
+};
+
+/* EOF */

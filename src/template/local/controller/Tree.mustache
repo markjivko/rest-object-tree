@@ -1,0 +1,77 @@
+'use strict';
+
+/**
+ * REST Tree Controller
+ * 
+ * @desc      Controller methods
+ * @copyright {{&extra.copyright}} 
+ * @desc      {{&info.description}}
+ * @author    {{&info.contact.name}} - {{&info.contact.url}}
+ * @version   {{&info.version}}
+ * @license   {{&info.license.name}} - {{&info.license.url}}
+ */
+var utils = require('../util/writer.js');
+var serviceTree = require('../service/tree');
+
+{{#branches}}
+/**
+ * Tree/{{&branch.path}}: {{&branch.description}}
+ */
+
+/**
+ * Delete relation from branch {{&branch.path}}
+ * 
+ * @param {object} req  Request
+ * @param {object} res  Result
+ * @param {object} next Next{{#branch.args}}
+ * @param {string} {{varName}} {{name}} ID{{/branch.args}}
+ */
+module.exports.treeDelete{{branch.method}} = function(req, res, next, {{&branch.argList}}) {
+    serviceTree.delete("{{&branch.key}}", { {{&branch.argList}} })
+        .then(function (response) {
+            utils.writeJson(res, response);
+        })
+        .catch(function (response) {
+            utils.writeJson(res, response);
+        });
+};
+
+/**
+ * Get objects from branch {{&branch.path}}
+ * 
+ * @param {object} req    Request
+ * @param {object} res    Result
+ * @param {object} next   Next
+ * @param {string} expand Comma-separated list of objects to expand{{#branch.args}}
+ * @param {string} {{varName}} (optional) {{name}} ID{{/branch.args}}
+ */
+module.exports.treeGet{{branch.method}} = function(req, res, next, expand, {{&branch.argList}}) {
+    serviceTree.get("{{&branch.key}}", expand, { {{&branch.argList}} })
+        .then(function (response) {
+            utils.writeJson(res, response);
+        })
+        .catch(function (response) {
+            utils.writeJson(res, response);
+        });
+};
+
+/**
+ * Set relation in branch {{&branch.path}}
+ * 
+ * @param {object} req  Request
+ * @param {object} res  Result
+ * @param {object} next Next{{#branch.args}}
+ * @param {string} {{varName}} {{name}} ID{{/branch.args}}
+ */
+module.exports.treeSet{{branch.method}} = function(req, res, next, {{&branch.argList}}) {
+    serviceTree.set("{{&branch.key}}", { {{&branch.argList}} })
+        .then(function (response) {
+            utils.writeJson(res, response);
+        })
+        .catch(function (response) {
+            utils.writeJson(res, response);
+        });
+};
+
+{{/branches}}
+/* EOF */

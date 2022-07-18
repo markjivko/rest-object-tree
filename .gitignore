@@ -1,0 +1,13 @@
+# Folder view configuration files
+.DS_Store
+Desktop.ini
+
+# Thumbnail cache files
+._*
+Thumbs.db
+
+# Application files
+/node_modules
+/out
+/package-lock.json
+/config/config.yaml

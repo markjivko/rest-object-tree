@@ -1,0 +1,363 @@
+'use strict';
+
+/**
+ * REST Object Controller
+ * 
+ * @desc      Controller methods
+ * @copyright {{&extra.copyright}} 
+ * @desc      {{&info.description}}
+ * @author    {{&info.contact.name}} - {{&info.contact.url}}
+ * @version   {{&info.version}}
+ * @license   {{&info.license.name}} - {{&info.license.url}}
+ */
+const writer = require('../util/writer.js');
+const serviceObject = require('../service/Object');
+
+{{#objects}}
+/**
+ * Object/{{&object.name}}: {{&object.description}}
+ */
+/**
+ * {{&object.name}} - List all Objects
+ * 
+ * @param {object} req        Request
+ * @param {object} res        Result
+ * @param {object} next       Next
+ * @param {int}    listSize   (optional) List size; default <b>0</b>
+ * @param {int}    listOffset (optional) List offset; default <b>0</b>
+ */
+module.exports.objectList{{object.method}} = function(req, res, next, listSize, listOffset) {
+    serviceObject.list("{{object.key}}", listSize, listOffset)
+        .then(function (response) {
+            writer.writeJson(res, response);
+        })
+        .catch(function (response) {
+            writer.writeJson(res, response);
+        });
+};
+
+/**
+ * {{&object.name}} - Get object by ID
+ * 
+ * @param {object} req      Request
+ * @param {object} res      Result
+ * @param {object} next     Next
+ * @param {string} objectId Object ID
+ */
+module.exports.objectRead{{object.method}} = function(req, res, next, objectId) {
+    serviceObject.read("{{object.key}}", objectId)
+        .then(function (response) {
+            writer.writeJson(res, response);
+        })
+        .catch(function (response) {
+            writer.writeJson(res, response);
+        });
+};
+
+/**
+ * {{&object.name}} - Delete object by ID
+ * 
+ * @param {object} req      Request
+ * @param {object} res      Result
+ * @param {object} next     Next
+ * @param {string} objectId Object ID
+ */
+module.exports.objectDelete{{object.method}} = function(req, res, next, objectId) {
+    serviceObject.delete("{{object.key}}", objectId)
+        .then(function (response) {
+            writer.writeJson(res, response);
+        })
+        .catch(function (response) {
+            writer.writeJson(res, response);
+        });
+};
+
+/**
+ * {{&object.name}} - Read object at version
+ * 
+ * @param {object} req      Request
+ * @param {object} res      Result
+ * @param {object} next     Next
+ * @param {string} objectId Object ID
+ * @param {int}    version  Version number
+ */
+module.exports.objectVersionRead{{object.method}} = function(req, res, next, objectId, version) {
+    serviceObject.versionRead("{{object.key}}", objectId, version)
+        .then(function (response) {
+            writer.writeJson(res, response);
+        })
+        .catch(function (response) {
+            writer.writeJson(res, response);
+        });
+};
+
+/**
+ * {{&object.name}} - Revert object to version
+ * 
+ * @param {object} req      Request
+ * @param {object} res      Result
+ * @param {object} next     Next
+ * @param {string} objectId Object ID
+ * @param {int}    version  Version number
+ */
+module.exports.objectVersionUse{{object.method}} = function(req, res, next, objectId, version) {
+    serviceObject.versionUse("{{object.key}}", objectId, version)
+        .then(function (response) {
+            writer.writeJson(res, response);
+        })
+        .catch(function (response) {
+            writer.writeJson(res, response);
+        });
+};
+
+/**
+ * {{&object.name}} - Delete all drafts
+ * 
+ * @param {object} req      Request
+ * @param {object} res      Result
+ * @param {object} next     Next
+ * @param {string} objectId Object ID
+ */
+module.exports.objectDraftDeleteAll{{object.method}} = function(req, res, next, objectId) {
+    serviceObject.draftDeleteAll("{{object.key}}", objectId)
+        .then(function (response) {
+            writer.writeJson(res, response);
+        })
+        .catch(function (response) {
+            writer.writeJson(res, response);
+        });
+};
+
+/**
+ * {{&object.name}} - List all Drafts
+ * 
+ * @param {object} req        Request
+ * @param {object} res        Result
+ * @param {object} next       Next
+ * @param {string} objectId   Object ID
+ * @param {int}    listSize   (optional) List size; default <b>0</b>
+ * @param {int}    listOffset (optional) List offset; default <b>0</b>
+ */
+module.exports.objectDraftList{{object.method}} = function(req, res, next, objectId, listSize, listOffset) {
+    serviceObject.draftList("{{object.key}}", objectId, listSize, listOffset)
+        .then(function (response) {
+            writer.writeJson(res, response);
+        })
+        .catch(function (response) {
+            writer.writeJson(res, response);
+        });
+};
+
+/**
+ * {{&object.name}} - Get Object Draft
+ * 
+ * @param {object} req      Request
+ * @param {object} res      Result
+ * @param {object} next     Next
+ * @param {string} objectId Object ID
+ * @param {int}    draftId  Draft ID
+ */
+module.exports.objectDraftRead{{object.method}} = function(req, res, next, objectId, draftId) {
+    serviceObject.draftRead("{{object.key}}", objectId, draftId)
+        .then(function (response) {
+            writer.writeJson(res, response);
+        })
+        .catch(function (response) {
+            writer.writeJson(res, response);
+        });
+};
+
+/**
+ * {{&object.name}} - Publish Draft to Object
+ * 
+ * @param {object} req      Request
+ * @param {object} res      Result
+ * @param {object} next     Next
+ * @param {string} objectId Object ID
+ * @param {int}    draftId  Draft ID
+ */
+module.exports.objectDraftUse{{object.method}} = function(req, res, next, objectId, draftId) {
+    serviceObject.draftUse("{{object.key}}", objectId, draftId)
+        .then(function (response) {
+            writer.writeJson(res, response);
+        })
+        .catch(function (response) {
+            writer.writeJson(res, response);
+        });
+};
+
+/**
+ * {{&object.name}} - Update Object Draft
+ * 
+ * @param {object} req      Request
+ * @param {object} res      Result
+ * @param {object} next     Next
+ * @param {string} objectId Object ID
+ * @param {int}    draftId  Draft ID
+ * @param {object} data     Draft data
+ */
+module.exports.objectDraftUpdate{{object.method}} = function(req, res, next, objectId, draftId, data) {
+    serviceObject.draftUpdate("{{object.key}}", objectId, draftId, data)
+        .then(function (response) {
+            writer.writeJson(res, response);
+        })
+        .catch(function (response) {
+            writer.writeJson(res, response);
+        });
+};
+
+/**
+ * {{&object.name}} - Delete Object Draft
+ * 
+ * @param {object} req      Request
+ * @param {object} res      Result
+ * @param {object} next     Next
+ * @param {string} objectId Object ID
+ * @param {int}    draftId  Draft ID
+ */
+module.exports.objectDraftDelete{{object.method}} = function(req, res, next, objectId, draftId) {
+    serviceObject.draftDelete("{{object.key}}", objectId, draftId)
+        .then(function (response) {
+            writer.writeJson(res, response);
+        })
+        .catch(function (response) {
+            writer.writeJson(res, response);
+        });
+};
+
+/**
+ * {{&object.name}} - Create a new template
+ * 
+ * @param {object} req        Request
+ * @param {object} res        Result
+ * @param {object} next       Next
+ * @param {string} templateId Template ID
+ * @param {object} data       Template data (JSON object)
+ * @param {object} schema     Template schema (JSON object)
+ */
+module.exports.objectTemplateCreate{{object.method}} = function(req, res, next, templateId, data, schema) {
+    serviceObject.templateCreate("{{object.key}}", templateId, data, schema)
+        .then(function (response) {
+            writer.writeJson(res, response);
+        })
+        .catch(function (response) {
+            writer.writeJson(res, response);
+        });
+};
+
+/**
+ * {{&object.name}} - Delete all templates
+ * 
+ * @param {object} req  Request
+ * @param {object} res  Result
+ * @param {object} next Next
+ */
+module.exports.objectTemplateDeleteAll{{object.method}} = function(req, res, next) {
+    serviceObject.templateDeleteAll("{{object.key}}")
+        .then(function (response) {
+            writer.writeJson(res, response);
+        })
+        .catch(function (response) {
+            writer.writeJson(res, response);
+        });
+};
+
+/**
+ * {{&object.name}} - List all templates
+ * 
+ * @param {object} req        Request
+ * @param {object} res        Result
+ * @param {object} next       Next
+ * @param {int}    listSize   (optional) List size; default <b>0</b>
+ * @param {int}    listOffset (optional) List offset; default <b>0</b>
+ */
+module.exports.objectTemplateList{{object.method}} = function(req, res, next, listSize, listOffset) {
+    serviceObject.templateList("{{object.key}}", listSize, listOffset)
+        .then(function (response) {
+            writer.writeJson(res, response);
+        })
+        .catch(function (response) {
+            writer.writeJson(res, response);
+        });
+};
+
+/**
+ * {{&object.name}} - Read Template
+ * 
+ * @param {object} req        Request
+ * @param {object} res        Result
+ * @param {object} next       Next
+ * @param {string} templateId Template ID
+ */
+module.exports.objectTemplateRead{{object.method}} = function(req, res, next, templateId) {
+    serviceObject.templateRead("{{object.key}}", templateId)
+        .then(function (response) {
+            writer.writeJson(res, response);
+        })
+        .catch(function (response) {
+            writer.writeJson(res, response);
+        });
+};
+
+/**
+ * {{&object.name}} - Update template
+ * 
+ * @param {object} req        Request
+ * @param {object} res        Result
+ * @param {object} next       Next
+ * @param {string} templateId Template ID
+ * @param {object} data       Template data (JSON object)
+ * @param {object} schema     Template schema (JSON object)
+ */
+module.exports.objectTemplateUpdate{{object.method}} = function(req, res, next, templateId, data, schema) {
+    serviceObject.templateUpdate("{{object.key}}", data, schema)
+        .then(function (response) {
+            writer.writeJson(res, response);
+        })
+        .catch(function (response) {
+            writer.writeJson(res, response);
+        });
+};
+
+/**
+ * {{&object.name}} - Delete template
+ * 
+ * @param {object} req        Request
+ * @param {object} res        Result
+ * @param {object} next       Next
+ * @param {string} templateId Template ID
+ */
+module.exports.objectTemplateDelete{{object.method}} = function(req, res, next, templateId) {
+    serviceObject.templateDelete("{{object.key}}", templateId)
+        .then(function (response) {
+            writer.writeJson(res, response);
+        })
+        .catch(function (response) {
+            writer.writeJson(res, response);
+        });
+};
+
+/**
+ * {{&object.name}} - Use Template to create a Draft inside Object
+ * 
+ * @param {object} req        Request
+ * @param {object} res        Result
+ * @param {object} next       Next
+ * @param {string} templateId Template ID
+ * @param {string} objectId   Object ID
+ * @param {boolean} publish   (optional) Publish the created Draft immediately; default <b>false</b>
+ * @param {boolean} data      (optional) Replace the template data for this draft (JSON object); default <b>null</b>, 
+ * uses the default data stored in the template
+ */
+module.exports.objectTemplateUse{{object.method}} = function(req, res, next, templateId, objectId, publish, data) {
+    serviceObject.templateUse("{{object.key}}", templateId, objectId, publish, data)
+        .then(function (response) {
+            writer.writeJson(res, response);
+        })
+        .catch(function (response) {
+            writer.writeJson(res, response);
+        });
+};
+
+{{/objects}}
+/* EOF */
