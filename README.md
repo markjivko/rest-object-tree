@@ -2,6 +2,8 @@
 
 ## Usage
 
+### Generate
+
 Prepare the new `rest/api/openapi.yaml` specification and generate the REST API source code.
 
 ```
@@ -11,6 +13,14 @@ npm run generate
 You can easily define objects and tree branches in `config/config.yaml`.
 
 Choose one of the predefined generators or create a new one in `src/generator/*.js`.
+
+### Serve
+
+Launch the REST API and its documentation:
+
+```
+npm run serve
+```
 
 ## REST API Description
 
