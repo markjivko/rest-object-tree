@@ -1,5 +1,11 @@
 # REST Object Tree Generator
 
+<p align="center">
+    <a href="https://app.swaggerhub.com/apis/markjivko/bbox/0.0.1">
+        <img src="https://repository-images.githubusercontent.com/515061083/12dfbbe0-a8db-4413-932f-cf3a171b1074"/>
+    </a>
+</p>
+
 ## 1. Usage
 
 ### 1.1. Generate
